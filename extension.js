@@ -166,6 +166,11 @@ class ClaudeTokenIndicator extends PanelMenu.Button {
         this._lastWeeklyUsed  = this._settings.get_int('last-weekly-used');
         this._timerId = null;
         this._currentInterval = this._settings.get_int('poll-interval-idle');
+        this._sessionResetTime = null;
+        this._weeklyResetTime = null;
+
+        // Enable reactive for hover events
+        this.reactive = true;
 
         // Watch for credential changes
         this._settingsChangedId = this._settings.connect('changed::session-cookie', () => {
@@ -197,10 +202,12 @@ class ClaudeTokenIndicator extends PanelMenu.Button {
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
-        // Reset / last-updated
-        this._resetItem  = new PopupMenu.PopupMenuItem('', {reactive: false});
+        // Reset times
+        this._sessionResetItem = new PopupMenu.PopupMenuItem('', {reactive: false});
+        this._weeklyResetItem  = new PopupMenu.PopupMenuItem('', {reactive: false});
         this._updatedItem = new PopupMenu.PopupMenuItem('', {reactive: false});
-        this.menu.addMenuItem(this._resetItem);
+        this.menu.addMenuItem(this._sessionResetItem);
+        this.menu.addMenuItem(this._weeklyResetItem);
         this.menu.addMenuItem(this._updatedItem);
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
@@ -471,12 +478,25 @@ class ClaudeTokenIndicator extends PanelMenu.Button {
             `5-hour window: ${_fmt(sessionUsed)} / ${_fmt(sessionLimit)} tokens (${sPct}%)`;
         this._weeklyDetail.label.text =
             `Weekly quota:  ${_fmt(weeklyUsed)} / ${_fmt(weeklyLimit)} tokens (${wPct}%)`;
-        this._resetItem.label.text =
+        
+        // Store reset times for tooltip
+        this._sessionResetTime = sessionReset;
+        this._weeklyResetTime = weeklyReset;
+        
+        // Update reset time displays in menu
+        this._sessionResetItem.label.text =
             sessionReset
-                ? `Session resets: ${_fmtDate(sessionReset)}`
-                : '';
+                ? `5h resets:  ${_fmtDate(sessionReset)}`
+                : '5h resets:  Unknown';
+        this._weeklyResetItem.label.text =
+            weeklyReset
+                ? `7d resets:  ${_fmtDate(weeklyReset)}`
+                : '7d resets:  Unknown';
         this._updatedItem.label.text =
             `Last updated: ${_fmtDate(new Date().toISOString())}`;
+        
+        // Update tooltip
+        this._updateTooltip();
 
         this._scheduleNextPoll(nextInterval);
     }
@@ -487,9 +507,79 @@ class ClaudeTokenIndicator extends PanelMenu.Button {
         this._weeklyDetail.label.text  = '';
     }
 
+    // ── Tooltip ───────────────────────────────────────────────────────────────
+
+    _updateTooltip() {
+        const lines = [];
+        
+        if (this._sessionResetTime) {
+            lines.push(`5h window resets: ${_fmtDate(this._sessionResetTime)}`);
+        } else {
+            lines.push('5h window resets: Unknown');
+        }
+        
+        if (this._weeklyResetTime) {
+            lines.push(`Weekly quota resets: ${_fmtDate(this._weeklyResetTime)}`);
+        } else {
+            lines.push('Weekly quota resets: Unknown');
+        }
+        
+        const tooltipText = lines.join('\n');
+        
+        // Create or update tooltip
+        if (!this._tooltip) {
+            this._tooltip = new St.Label({
+                style_class: 'ct-tooltip',
+                text: tooltipText,
+                visible: false,
+            });
+            Main.layoutManager.addChrome(this._tooltip);
+        } else {
+            this._tooltip.text = tooltipText;
+        }
+    }
+    
+    vfunc_event(event) {
+        const eventType = event.type();
+        
+        if (eventType === Clutter.EventType.ENTER) {
+            this._showTooltip();
+        } else if (eventType === Clutter.EventType.LEAVE) {
+            this._hideTooltip();
+        }
+        
+        return super.vfunc_event(event);
+    }
+    
+    _showTooltip() {
+        if (!this._tooltip) return;
+        
+        // Position tooltip near the panel indicator
+        const [x, y] = this.get_transformed_position();
+        const [width, height] = this.get_transformed_size();
+        
+        this._tooltip.set_position(
+            Math.floor(x),
+            Math.floor(y + height + 5)
+        );
+        this._tooltip.show();
+    }
+    
+    _hideTooltip() {
+        if (this._tooltip) {
+            this._tooltip.hide();
+        }
+    }
+
     // ── Cleanup ───────────────────────────────────────────────────────────────
 
     destroy() {
+        this._hideTooltip();
+        if (this._tooltip) {
+            Main.layoutManager.removeChrome(this._tooltip);
+            this._tooltip.destroy();
+            this._tooltip = null;
+        }
         this._cancelTimer();
         if (this._settingsChangedId) {
             this._settings.disconnect(this._settingsChangedId);

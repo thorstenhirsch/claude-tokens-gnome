@@ -94,3 +94,16 @@
     font-weight: bold;
     color: rgba(255, 255, 255, 0.90);
 }
+
+/* ── Tooltip ──────────────────────────────────────────────── */
+
+.ct-tooltip {
+    background-color: rgba(0, 0, 0, 0.85);
+    color: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 10pt;
+    font-weight: normal;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
