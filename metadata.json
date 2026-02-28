@@ -1,0 +1,10 @@
+{
+  "name": "Claude Token Monitor",
+  "description": "Displays Claude AI session and weekly token usage as progress bars in the GNOME top panel. Polls the claude.ai web API using your session cookie.",
+  "uuid": "claude-tokens@maki",
+  "version": 1,
+  "shell-version": ["45", "46", "47", "48"],
+  "url": "https://github.com/maki/claude-tokens-gnome",
+  "settings-schema": "org.gnome.shell.extensions.claude-tokens",
+  "gettext-domain": "claude-tokens@maki"
+}

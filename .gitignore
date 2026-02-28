@@ -1,0 +1,13 @@
+# Compiled GSettings schema
+schemas/gschemas.compiled
+
+# Distributable zip
+*.zip
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+*.swp
+*~

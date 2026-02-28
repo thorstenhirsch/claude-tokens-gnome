@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.claude-tokens"
+          path="/org/gnome/shell/extensions/claude-tokens/">
+
+    <key name="session-cookie" type="s">
+      <default>''</default>
+      <summary>Claude.ai session cookie</summary>
+      <description>
+        Your claude.ai session cookie (sessionKey value). Open DevTools on
+        claude.ai → Storage → Cookies and copy the value of "sessionKey".
+      </description>
+    </key>
+
+    <key name="poll-interval-idle" type="i">
+      <default>30</default>
+      <range min="10" max="300"/>
+      <summary>Idle poll interval (seconds)</summary>
+      <description>How often to poll when token count is unchanged.</description>
+    </key>
+
+    <key name="poll-interval-active" type="i">
+      <default>5</default>
+      <range min="1" max="60"/>
+      <summary>Active poll interval (seconds)</summary>
+      <description>How often to poll when token count is decreasing.</description>
+    </key>
+
+    <key name="show-numbers" type="b">
+      <default>true</default>
+      <summary>Show token numbers</summary>
+      <description>Display remaining / total token counts next to the bars.</description>
+    </key>
+
+    <key name="last-session-used" type="i">
+      <default>0</default>
+      <summary>Last known session tokens used (internal)</summary>
+      <description>Persisted between sessions to detect changes.</description>
+    </key>
+
+    <key name="last-weekly-used" type="i">
+      <default>0</default>
+      <summary>Last known weekly tokens used (internal)</summary>
+      <description>Persisted between sessions to detect changes.</description>
+    </key>
+
+  </schema>
+</schemalist>

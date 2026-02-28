@@ -1,0 +1,96 @@
+/* ============================================================
+   Claude Token Monitor – GNOME Shell stylesheet
+   Targets the Shell's default dark/light Adwaita colour tokens.
+   ============================================================ */
+
+/* ── Panel container ──────────────────────────────────────── */
+
+.ct-panel-box {
+    spacing: 4px;
+    padding: 0 2px;
+}
+
+/* ── Icon ─────────────────────────────────────────────────── */
+
+.ct-icon {
+    icon-size: 14px;
+    /* inherits panel text colour (usually white/light-grey) */
+    padding-right: 4px;
+}
+
+.ct-icon-warning {
+    color: #e5a50a;   /* Adwaita warning yellow-orange */
+}
+
+.ct-icon-critical {
+    color: #e01b24;   /* Adwaita destructive-action red */
+}
+
+/* ── Overall bars container ───────────────────────────────── */
+
+.ct-bars-box {
+    spacing: 2px;
+    padding: 2px 0;
+}
+
+/* ── Single bar row (label + track + numbers) ─────────────── */
+
+.ct-row {
+    spacing: 4px;
+}
+
+/* ── Side labels: "5h " / " 7d " ─────────────────────────── */
+
+.ct-bar-label {
+    font-size: 9px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.75);
+    min-width: 2.2em;
+    text-align: right;
+}
+
+/* ── Progress bar track (background) ─────────────────────── */
+
+.ct-track {
+    background-color: rgba(255, 255, 255, 0.18);
+    border-radius: 3px;
+    /* width / height are set programmatically (BAR_WIDTH / BAR_HEIGHT) */
+}
+
+/* ── Progress bar fill ────────────────────────────────────── */
+
+.ct-fill {
+    border-radius: 3px;
+}
+
+/* Normal: calm blue-teal matching GNOME accent */
+.ct-fill-normal {
+    background-color: #3584e4;   /* Adwaita @blue_3 */
+}
+
+/* Warning: amber – consistent with system notification icons */
+.ct-fill-warning {
+    background-color: #e5a50a;   /* Adwaita @yellow_4 */
+}
+
+/* Critical: GNOME destructive red */
+.ct-fill-critical {
+    background-color: #e01b24;   /* Adwaita @red_4 */
+    /* subtle pulse animation so users notice the limit is hit */
+    transition-duration: 600ms;
+}
+
+/* ── Token count numbers ──────────────────────────────────── */
+
+.ct-numbers {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.60);
+    min-width: 9em;
+}
+
+/* ── Dropdown menu ────────────────────────────────────────── */
+
+.ct-menu-status {
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.90);
+}
